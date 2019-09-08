@@ -3,6 +3,9 @@ import scrapy
 from etender.items import EtenderItem, FileItem
 import itertools
 import json
+import html2text
+
+h = html2text.HTML2Text()
 
 
 class TendersSpider(scrapy.Spider):
@@ -74,6 +77,8 @@ class TendersSpider(scrapy.Spider):
         )
 
     def parse_tender(self, response):
+        overview_html = response.css(".field-name-field-econtact").get()
+        overview_markdown = h.handle(overview_html)
         tender_item = EtenderItem(
             url=response.url,
             entity=response.meta["entity"],
@@ -82,6 +87,8 @@ class TendersSpider(scrapy.Spider):
             date_published=response.meta["date_published"],
             closing_time_and_date=response.meta["closing_date"],
             compulsory_briefing_session=response.meta["compulsory_briefing_date"],
+            overview_markdown=overview_markdown,
+            overview_html=overview_html,
         )
         yield tender_item
 

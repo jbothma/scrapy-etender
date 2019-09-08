@@ -8,12 +8,12 @@ class EtenderItem(scrapy.Item):
     entity = scrapy.Field()
     title = scrapy.Field()
     number = scrapy.Field()
-    description_short = scrapy.Field()
     category = scrapy.Field()
     date_published = scrapy.Field()
     closing_time_and_date = scrapy.Field()
     compulsory_briefing_session = scrapy.Field()
-    free_text = scrapy.Field()
+    overview_markdown = scrapy.Field()
+    overview_html = scrapy.Field()
 
 
 class FileItem(scrapy.Item):
