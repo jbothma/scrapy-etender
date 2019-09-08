@@ -5,6 +5,8 @@ import scrapy
 
 class EtenderItem(scrapy.Item):
     url = scrapy.Field()
+    entity = scrapy.Field()
+    title = scrapy.Field()
     number = scrapy.Field()
     description_short = scrapy.Field()
     category = scrapy.Field()

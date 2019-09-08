@@ -22,7 +22,7 @@ class TendersSpider(scrapy.Spider):
                 continue
             if option["label"] != "ESKOM":
                 continue
-            yield self.create_search_request(option, page=0)
+            yield self.create_search_request(option, page_number=0)
 
     def parse_advertised(self, response):
         print(response.meta["department_option"]["label"])
@@ -36,7 +36,6 @@ class TendersSpider(scrapy.Spider):
             meta = {
                 "entity": response.meta["department_option"]["label"],
                 "title": row.css(".views-field-title a::text").get().strip(),
-                "tender_page_url": row.css(".views-field-title").xpath(".//a/@href").get().strip(),
                 "category": row.css(".views-field-field-tender-category::text").get().strip(),
                 "date_published": row.css(
                     ".views-field-field-date-published").xpath(".//span/@content").get(),
@@ -45,9 +44,11 @@ class TendersSpider(scrapy.Spider):
                 "compulsory_briefing_date": row.css(
                     ".views-field-field-compulsory-briefing-sessio").xpath(".//span/@content").get(),
             }
-            print(meta)
+            relative_url = row.css(".views-field-title").xpath(".//a/@href").get().strip()
+            absolute_url = response.urljoin(relative_url)
+            yield scrapy.http.Request(absolute_url, self.parse_tender, meta=meta)
 
-    def create_search_request(self, department_option, page):
+    def create_search_request(self, department_option, page_number):
         url = "https://etenders.treasury.gov.za/views/ajax"
         formdata = {
             "field_tender_category_tid": "All",
@@ -59,7 +60,7 @@ class TendersSpider(scrapy.Spider):
             "view_display_id": "block_2",
             "view_path": "node/42",
             "view_base_path": "search_tender_published",
-            "page": str(0),
+            "page": str(page_number),
         }
         meta = {
             "department_option": department_option,
@@ -72,6 +73,17 @@ class TendersSpider(scrapy.Spider):
             meta=meta
         )
 
+    def parse_tender(self, response):
+        tender_item = EtenderItem(
+            url=response.url,
+            entity=response.meta["entity"],
+            title=response.meta["title"],
+            category=response.meta["category"],
+            date_published=response.meta["date_published"],
+            closing_time_and_date=response.meta["closing_date"],
+            compulsory_briefing_session=response.meta["compulsory_briefing_date"],
+        )
+        yield tender_item
 
 def get_select_options(field_name, response):
     field_option_elements = response.css(f"#edit-field-{field_name}-tid option")
