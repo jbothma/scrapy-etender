@@ -14,6 +14,7 @@ BOT_NAME = 'etender'
 SPIDER_MODULES = ['etender.spiders']
 NEWSPIDER_MODULE = 'etender.spiders'
 
+DUPEFILTER_CLASS = 'scrapy.dupefilters.BaseDupeFilter'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'etender (+http://www.yourdomain.com)'

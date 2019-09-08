@@ -4,6 +4,7 @@ from etender.items import EtenderItem, FileItem
 import itertools
 import json
 import html2text
+from urllib.parse import urlparse, parse_qs
 
 h = html2text.HTML2Text()
 
@@ -23,34 +24,7 @@ class TendersSpider(scrapy.Spider):
         for option in field_options:
             if option["value"] == "All":
                 continue
-            if option["label"] != "ESKOM":
-                continue
             yield self.create_search_request(option, page_number=0)
-
-    def parse_advertised(self, response):
-        print(response.meta["department_option"]["label"])
-        response_list = json.loads(response.body_as_unicode())
-        insert_command = [c for c in response_list if c["command"] == "insert"][0]
-        html = insert_command["data"]
-        html_response = scrapy.http.HtmlResponse(url="", body=html.encode("utf-8"))
-        for row in html_response.css("tr"):
-            if not row.css(".views-field-title a"):
-                continue
-            meta = {
-                "entity": response.meta["department_option"]["label"],
-                "title": row.css(".views-field-title a::text").get().strip(),
-                "category": row.css(".views-field-field-tender-category::text").get().strip(),
-                "number": row.css(".views-field-field-code::text").get().strip(),
-                "date_published": row.css(
-                    ".views-field-field-date-published").xpath(".//span/@content").get(),
-                "closing_date": row.css(
-                    ".views-field-field-closing-date").xpath(".//span/@content").get(),
-                "compulsory_briefing_date": row.css(
-                    ".views-field-field-compulsory-briefing-sessio").xpath(".//span/@content").get(),
-            }
-            relative_url = row.css(".views-field-title").xpath(".//a/@href").get().strip()
-            absolute_url = response.urljoin(relative_url)
-            yield scrapy.http.Request(absolute_url, self.parse_tender, meta=meta)
 
     def create_search_request(self, department_option, page_number):
         url = "https://etenders.treasury.gov.za/views/ajax"
@@ -72,10 +46,43 @@ class TendersSpider(scrapy.Spider):
         return scrapy.http.FormRequest(
             url,
             formdata=formdata,
-            callback=self.parse_advertised,
+            callback=self.parse_search_result,
             method="POST",
             meta=meta
         )
+
+    def parse_search_result(self, response):
+        print(response.meta["department_option"]["label"])
+        response_list = json.loads(response.body_as_unicode())
+        insert_command = [c for c in response_list if c["command"] == "insert"][0]
+        html = insert_command["data"]
+        html_response = scrapy.http.HtmlResponse(url="", body=html.encode("utf-8"))
+
+        pager_next = html_response.css(".pager-next")
+        if pager_next:
+            next_url_parsed = urlparse(pager_next.xpath(".//a/@href").get())
+            next_page_number = int(parse_qs(next_url_parsed.query)["page"][0])
+            department_option = response.meta["department_option"]
+            yield self.create_search_request(department_option, next_page_number)
+
+        for row in html_response.css("tr"):
+            if not row.css(".views-field-title a"):
+                continue
+            meta = {
+                "entity": response.meta["department_option"]["label"],
+                "title": row.css(".views-field-title a::text").get().strip(),
+                "category": row.css(".views-field-field-tender-category::text").get().strip(),
+                "number": row.css(".views-field-field-code::text").get().strip(),
+                "date_published": row.css(
+                    ".views-field-field-date-published").xpath(".//span/@content").get(),
+                "closing_date": row.css(
+                    ".views-field-field-closing-date").xpath(".//span/@content").get(),
+                "compulsory_briefing_date": row.css(
+                    ".views-field-field-compulsory-briefing-sessio").xpath(".//span/@content").get(),
+            }
+            relative_url = row.css(".views-field-title").xpath(".//a/@href").get().strip()
+            absolute_url = response.urljoin(relative_url)
+            yield scrapy.http.Request(absolute_url, self.parse_tender, meta=meta)
 
     def parse_tender(self, response):
         overview_html = response.css(".field-name-field-econtact").get()
