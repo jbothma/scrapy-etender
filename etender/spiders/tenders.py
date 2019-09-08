@@ -30,8 +30,22 @@ class TendersSpider(scrapy.Spider):
         insert_command = [c for c in response_list if c["command"] == "insert"][0]
         html = insert_command["data"]
         html_response = scrapy.http.HtmlResponse(url="", body=html.encode("utf-8"))
-        for title in html_response.css(".views-field-title").xpath(".//a/text()").getall():
-            print("  %s" % title)
+        for row in html_response.css("tr"):
+            if not row.css(".views-field-title a"):
+                continue
+            meta = {
+                "entity": response.meta["department_option"]["label"],
+                "title": row.css(".views-field-title a::text").get().strip(),
+                "tender_page_url": row.css(".views-field-title").xpath(".//a/@href").get().strip(),
+                "category": row.css(".views-field-field-tender-category::text").get().strip(),
+                "date_published": row.css(
+                    ".views-field-field-date-published").xpath(".//span/@content").get(),
+                "closing_date": row.css(
+                    ".views-field-field-closing-date").xpath(".//span/@content").get(),
+                "compulsory_briefing_date": row.css(
+                    ".views-field-field-compulsory-briefing-sessio").xpath(".//span/@content").get(),
+            }
+            print(meta)
 
     def create_search_request(self, department_option, page):
         url = "https://etenders.treasury.gov.za/views/ajax"
