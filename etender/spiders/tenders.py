@@ -40,6 +40,7 @@ class TendersSpider(scrapy.Spider):
                 "entity": response.meta["department_option"]["label"],
                 "title": row.css(".views-field-title a::text").get().strip(),
                 "category": row.css(".views-field-field-tender-category::text").get().strip(),
+                "number": row.css(".views-field-field-code::text").get().strip(),
                 "date_published": row.css(
                     ".views-field-field-date-published").xpath(".//span/@content").get(),
                 "closing_date": row.css(
@@ -81,6 +82,7 @@ class TendersSpider(scrapy.Spider):
         overview_markdown = h.handle(overview_html)
         tender_item = EtenderItem(
             url=response.url,
+            number=response.meta["number"],
             entity=response.meta["entity"],
             title=response.meta["title"],
             category=response.meta["category"],
