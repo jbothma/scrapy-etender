@@ -20,7 +20,7 @@ class TendersSpider(scrapy.Spider):
         for option in field_options:
             if option["value"] == "All":
                 continue
-            if option["value"] != "ESKOM":
+            if option["label"] != "ESKOM":
                 continue
             yield self.create_search_request(option, page=0)
 
@@ -30,7 +30,7 @@ class TendersSpider(scrapy.Spider):
         insert_command = [c for c in response_list if c["command"] == "insert"][0]
         html = insert_command["data"]
         html_response = scrapy.http.HtmlResponse(url="", body=html.encode("utf-8"))
-        for title in html_response.css(".views-field-title").xpath("/a/text()").getall():
+        for title in html_response.css(".views-field-title").xpath(".//a/text()").getall():
             print("  %s" % title)
 
     def create_search_request(self, department_option, page):
