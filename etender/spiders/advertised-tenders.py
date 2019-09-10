@@ -9,8 +9,8 @@ from urllib.parse import urlparse, parse_qs
 h = html2text.HTML2Text()
 
 
-class TendersSpider(scrapy.Spider):
-    name = "tenders"
+class AdvertisedTendersSpider(scrapy.Spider):
+    name = "advertised-tenders"
     allowed_domains = ["etenders.treasury.gov.za"]
 
     def start_requests(self):
