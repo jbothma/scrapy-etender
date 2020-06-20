@@ -1,9 +1,14 @@
 # scrapy-etender
 
-Scrape tenders
 
-  pipenv run scrapy crawl tenders -t csv -o tenders.csv
+## Development
 
-Scrape tender awards
+Create a python virtual environment and activate it
 
-  pipenv run scrapy crawl advertised-tenders -t csv -o advertised-2019-09-24-1445.csv
+Install requirements from requirements.txt
+
+    pip install -r requirements.txt
+
+Run the tenders scraper
+
+    scrapy crawl tenders -t csv -o tenders.csv
