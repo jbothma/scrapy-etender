@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
-from etender.items import EtenderItem, FileItem
-import itertools
+from etender.items import EtenderItem
 import json
 import html2text
 from urllib.parse import urlparse, parse_qs
@@ -52,7 +51,6 @@ class AdvertisedTendersSpider(scrapy.Spider):
         )
 
     def parse_search_result(self, response):
-        print(response.meta["department_option"]["label"])
         response_list = json.loads(response.body_as_unicode())
         insert_command = [c for c in response_list if c["command"] == "insert"][0]
         html = insert_command["data"]
