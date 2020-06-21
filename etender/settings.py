@@ -89,3 +89,14 @@ ROBOTSTXT_OBEY = True
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+FEED_STORAGES = {
+    "internetarchive": "etender.storages.InternetArchiveStorage",
+}
+FEED_STORAGE_INTERNETARCHIVE = {
+    "metadata": {
+        "mediatype": "data",
+        "coverage": "South Africa",
+        "title": "eTender Portal %(name)s %(time)s",
+    }
+}

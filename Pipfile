@@ -8,6 +8,4 @@ verify_ssl = true
 [packages]
 scrapy = "2.1.0"
 html2text = "*"
-
-[requires]
-python_version = "3.7"
+internetarchive = "==1.9.3"
