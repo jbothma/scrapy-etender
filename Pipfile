@@ -1,3 +1,5 @@
+# requirements.txt is authoritative
+
 [[source]]
 name = "pypi"
 url = "https://pypi.org/simple"
@@ -9,3 +11,4 @@ verify_ssl = true
 scrapy = "2.1.0"
 html2text = "*"
 internetarchive = "==1.9.3"
+shub = "*"

@@ -1,5 +1,11 @@
 # scrapy-etender
 
+## Production
+
+For production deployment, this can easily be run in Scrapinghub, scrapyd or from the command line similarly to development.
+
+**requirements.txt is the authoritative dependency file so that scraipinghub can install dependencies.**
+
 
 ## Development
 

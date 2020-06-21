@@ -1,1 +1,5 @@
+# Authoritative dependency list
+
 Scrapy==2.1.0
+html2text==2020.1.16
+internetarchive==1.9.3
