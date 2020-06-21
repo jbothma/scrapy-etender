@@ -52,7 +52,6 @@ class AwardedTendersSpider(scrapy.Spider):
         )
 
     def parse_search_result(self, response):
-        print(response.meta["department_option"]["label"])
         response_list = json.loads(response.body_as_unicode())
         insert_command = [c for c in response_list if c["command"] == "insert"][0]
         html = insert_command["data"]
