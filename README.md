@@ -3,12 +3,14 @@
 
 ## Development
 
-Create a python virtual environment and activate it
+Install dependencies
 
-Install requirements from requirements.txt
+    pipenv install
 
-    pip install -r requirements.txt
+Run the advertised tenders scraper
 
-Run the tenders scraper
+    pipenv run scrapy crawl advertised-tenders -t csv -o advertised-tenders.csv
 
-    scrapy crawl tenders -t csv -o tenders.csv
+Run the awarded tenders scraper
+
+    pipenv run scrapy crawl awarded-tenders -t csv -o awarded-tenders.csv
