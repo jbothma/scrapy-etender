@@ -95,8 +95,22 @@ FEED_STORAGES = {
 }
 FEED_STORAGE_INTERNETARCHIVE = {
     "metadata": {
+        "title": "eTender Portal %(name)s %(time)s",
         "mediatype": "data",
         "coverage": "South Africa",
-        "title": "eTender Portal %(name)s %(time)s",
+        "description": ("Data scraped from https://etenders.treasury.gov.za/. "
+                        "Each file aims to be a complete scrape of tenders in "
+                        "that state (advertised, awared, closed, cancelled) indicated "
+                        "by the file name, but don't rely on the file being complete. "
+                        "Files might be uploaded from partial scrapes. Rather "
+                        "match an advertised tender up in one of the documents "
+                        "in the other states to infer that it is not advertised "
+                        "any more."),
+        "rights": ("https://etenders.treasury.gov.za/ claims copyright but "
+                   "according to the Copyright Act, 1978 (as amended), § 12 (8) "
+                   "(a), \"No copyright shall subsist in official texts of a "
+                   "legislative, administrative or legal nature, or in official "
+                   "translations of such texts.\""),
+        "subject": "Government Procurement;Government Purchasing;Procurment;South Africa;Governance;Oversight;Tender",
     }
 }
