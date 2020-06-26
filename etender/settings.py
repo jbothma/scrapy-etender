@@ -95,7 +95,7 @@ FEED_STORAGES = {
 }
 FEED_STORAGE_INTERNETARCHIVE = {
     "metadata": {
-        "title": "eTender Portal %(name)s %(time)s",
+        "title": "eTender Portal %(name)s %(time)s %(filetype)s",
         "mediatype": "data",
         "coverage": "South Africa",
         "description": ("Data scraped from https://etenders.treasury.gov.za/. "
