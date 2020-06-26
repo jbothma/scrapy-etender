@@ -20,7 +20,9 @@ class InternetArchiveStorage(BlockingFeedStorage):
 
         settings = get_project_settings()
         unformatted_metadata = settings["FEED_STORAGE_INTERNETARCHIVE"]["metadata"]
-        self.scrape_params = parse_qs(u.query)
+        self.scrape_params = {}
+        for key, value in parse_qs(u.query).items():
+            self.scrape_params[key] = value[0]
         self.metadata = {}
         for key, value in unformatted_metadata.items():
             self.metadata[key] = value % self.scrape_params
