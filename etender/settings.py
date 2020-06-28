@@ -91,7 +91,7 @@ ROBOTSTXT_OBEY = True
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 FEED_STORAGES = {
-    "internetarchive": "etender.storages.InternetArchiveStorage",
+    "internetarchive": "feedstorage_internetarchive.storages.InternetArchiveStorage",
 }
 FEED_STORAGE_INTERNETARCHIVE = {
     "metadata": {
