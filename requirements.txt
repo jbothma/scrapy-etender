@@ -3,4 +3,4 @@
 Scrapy==2.1.0
 html2text==2020.1.16
 internetarchive==1.9.3
-git+https://github.com/OpenUpSA/scrapy-feed-storage-internetarchive#egg=feedstorage_internetarchive
+scrapy-feed-storage-internetarchive==0.0.1
